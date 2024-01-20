@@ -2,18 +2,29 @@ namespace Contacts.Maui.Views;
 
 public partial class ContactsPage : ContentPage
 {
-	public ContactsPage()
-	{
-		InitializeComponent();
-	}
-
-    private void bntEditContact_Clicked(object sender, EventArgs e)
+    public ContactsPage()
     {
-        Shell.Current.GoToAsync(nameof(EditContactPage));
+        InitializeComponent();
+
+        List<Contact> contacts = new List<Contact>()
+        {
+            new Contact() {Name="Grikduime",Email="Grikduime@email.com"},
+             new Contact() {Name="Kiudoir",Email="Kiudoir@email.com"},
+              new Contact() {Name="Veikennu",Email="Veikennu@email.com"},
+               new Contact() {Name="Silrunyo",Email="Silrunyo@email.com"},
+                new Contact() {Name="Piarar",Email="Piarar@email.com"}
+        };
+
+
+
+        listContacts.ItemsSource = contacts;
     }
 
-    private void bntAddContact_Clicked(object sender, EventArgs e)
+    public class Contact
     {
-        Shell.Current.GoToAsync(nameof(AddContactPage));
+        public string Name { get; set; }
+        public string Email { get; set; }
+
     }
+
 }
