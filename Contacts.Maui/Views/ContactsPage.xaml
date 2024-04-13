@@ -6,11 +6,22 @@
 
     <Grid 
         Padding="5"
-        RowDefinitions="*,50" 
-        ColumnDefinitions="1">
-
+        RowDefinitions="50, *, 50, 50"
+        ColumnDefinitions="*"
+        RowSpacing="5">
+        <SearchBar 
+           Grid.Row="0" 
+            Grid.Column="0" 
+            x:Name="SearchBar"
+            Placeholder="Search Contact"
+            TextChanged="SearchBar_TextChanged"
+            >
+            
+        </SearchBar>
+       
+        
         <ListView 
-         Grid.Row="0"
+         Grid.Row="1"
          Grid.Column="0"
         x:Name="listContacts"
         Background="Transparent"
@@ -26,12 +37,35 @@
                     DetailColor="Aquamarine" 
                     Detail="{Binding Email}" 
                     Text="{Binding Name}"
-                    ></TextCell>
+                    >
+                        <TextCell.ContextActions>
+                            <MenuItem Text="Delete"
+                                      IsDestructive="True"
+                                      Clicked="MenuItem_Clicked_Delete"
+                                      CommandParameter="{Binding .}"
+                                      >
+
+                            </MenuItem>
+                            <MenuItem Text="Edit" 
+                                      IsDestructive="false"
+                                       Clicked="MenuItem_Clicked_Edit"
+                                       CommandParameter="{Binding .}"
+                                      >
+
+                            </MenuItem>
+                        </TextCell.ContextActions>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
 
         </ListView>
-        <Button Grid.Row="1" Grid.Column="0" x:Name="btnAdd" Text="Add Contact" Clicked="btnAdd_Clicked"></Button>
+        <Button 
+            Grid.Row="2" 
+            Grid.Column="0" 
+            x:Name="btnAdd" 
+            Text="Add Contact" 
+            Clicked="btnAdd_Clicked">
+        </Button>
 
     </Grid>
 

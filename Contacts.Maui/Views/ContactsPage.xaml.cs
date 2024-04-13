@@ -9,24 +9,21 @@ public partial class ContactsPage : ContentPage
     public ContactsPage()
     {
         InitializeComponent();
-
-
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
 
-        var contacts = new ObservableCollection<Contact>(ContactRepository.GetContacts());
-        listContacts.ItemsSource = contacts;
+        SearchBar.Text = string.Empty;
+
+        LoadContacts();
     }
 
     private async void listContacts_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
         if (listContacts.SelectedItem != null)
         {
-            //logic
-            //DisplayAlert("test", "Selected", "OK");
 
             await Shell.Current.GoToAsync($"{nameof(EditContactPage)}?Id={((Contact)listContacts.SelectedItem).Id}");
         }
@@ -41,4 +38,34 @@ public partial class ContactsPage : ContentPage
     {
         Shell.Current.GoToAsync(nameof(AddContactPage));
     }
+
+    private void MenuItem_Clicked_Delete(object sender, EventArgs e)
+    {
+        var menuItem = sender as MenuItem;
+        var contact = menuItem.CommandParameter as Contact;
+        ContactRepository.DeleteContact(contact.Id);
+    }
+
+    private async void MenuItem_Clicked_Edit(object sender, EventArgs e)
+    {
+        var menuItem = sender as MenuItem;
+        var contact = menuItem.CommandParameter as Contact;
+
+        await Shell.Current.GoToAsync($"{nameof(EditContactPage)}?Id={contact.Id}");
+
+        LoadContacts();
+    }
+
+    private void LoadContacts()
+    {
+        var contacts = new ObservableCollection<Contact>(ContactRepository.GetContacts());
+        listContacts.ItemsSource = contacts;
+    }
+
+    private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        var contacts = new ObservableCollection<Contact>(ContactRepository.SearchContacts(((SearchBar)sender).Text));
+        listContacts.ItemsSource = contacts;
+    }
+
 }
