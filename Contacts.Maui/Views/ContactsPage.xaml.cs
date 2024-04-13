@@ -1,3 +1,7 @@
+using Contacts.Maui.Models;
+using System.Collections.ObjectModel;
+using Contact = Contacts.Maui.Models.Contact;
+
 namespace Contacts.Maui.Views;
 
 public partial class ContactsPage : ContentPage
@@ -6,25 +10,35 @@ public partial class ContactsPage : ContentPage
     {
         InitializeComponent();
 
-        List<Contact> contacts = new List<Contact>()
-        {
-            new Contact() {Name="Grikduime",Email="Grikduime@email.com"},
-             new Contact() {Name="Kiudoir",Email="Kiudoir@email.com"},
-              new Contact() {Name="Veikennu",Email="Veikennu@email.com"},
-               new Contact() {Name="Silrunyo",Email="Silrunyo@email.com"},
-                new Contact() {Name="Piarar",Email="Piarar@email.com"}
-        };
 
+    }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
 
+        var contacts = new ObservableCollection<Contact>(ContactRepository.GetContacts());
         listContacts.ItemsSource = contacts;
     }
 
-    public class Contact
+    private async void listContacts_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
+        if (listContacts.SelectedItem != null)
+        {
+            //logic
+            //DisplayAlert("test", "Selected", "OK");
 
+            await Shell.Current.GoToAsync($"{nameof(EditContactPage)}?Id={((Contact)listContacts.SelectedItem).Id}");
+        }
     }
 
+    private void listContacts_ItemTapped(object sender, ItemTappedEventArgs e)
+    {
+        listContacts.SelectedItem = null;
+    }
+
+    private void btnAdd_Clicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync(nameof(AddContactPage));
+    }
 }
